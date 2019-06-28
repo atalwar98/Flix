@@ -47,7 +47,26 @@
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:nil delegateQueue:[NSOperationQueue mainQueue]];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error != nil) {
-            NSLog(@"%@", [error localizedDescription]);
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No Movies!"
+                message:@"You seem to be offline. Please check your internet connection."
+                preferredStyle:(UIAlertControllerStyleAlert)];
+            // create a cancel action
+            UIAlertAction *tryAgainAction = [UIAlertAction actionWithTitle:@"Try Again"
+            style:UIAlertActionStyleCancel
+            handler:^(UIAlertAction * _Nonnull action) {
+            // handle try again response here. Doing nothing will dismiss the view.
+                // Start the activity indicator
+                [self.activityIndicator startAnimating];
+                [self fetchMovies];
+}];
+            // add the cancel action to the alertController
+            [alert addAction:tryAgainAction];
+            
+            
+            [self presentViewController:alert animated:YES completion:^{
+                // optional code for what happens after the alert controller has finished presenting
+            }];
         }
         else {
             NSDictionary *dataDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
@@ -58,8 +77,7 @@
             for (NSDictionary *movie in self.movies){
                 NSLog(@"%@", movie[@"title"]);
             }
-            // TODO: Store the movies in a property to use elsewhere
-            // TODO: Reload your table view data
+
             [self.tableView reloadData];
         }
         [self.refreshControl endRefreshing];
@@ -76,10 +94,9 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    //UITableViewCell *cell = [[UITableViewCell alloc] init];
-    //NSLog(@"%@", [NSString stringWithFormat:@"row: %d, section: %d", indexPath.row, indexPath.section]);
-    //cell.textLabel.text = [NSString stringWithFormat:@"row: %d, section: %d", indexPath.row, indexPath.section];
     MovieCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MovieCell"];
+    
+    
     NSDictionary *movie = self.movies[indexPath.row];
     cell.titleLabel.text = movie[@"title"];
     cell.synopsisLabel.text = movie[@"overview"];
@@ -90,9 +107,30 @@
     
     NSURL *posterURL = [NSURL URLWithString:fullPosterURLString];
     cell.posterView.image = nil;
+    NSURLRequest *request = [NSURLRequest requestWithURL:posterURL];
+
+    __weak MovieCell *weakCell = cell;
+    [cell.posterView setImageWithURLRequest:request placeholderImage:nil
+    success:^(NSURLRequest *imageRequest, NSHTTPURLResponse *imageResponse, UIImage *image) {
+                                        
+    // imageResponse will be nil if the image is cached
+    if (imageResponse) {
+        NSLog(@"Image was NOT cached, fade in image");
+        weakCell.posterView.alpha = 0.0;
+        weakCell.posterView.image = image;
+                                            
+        //Animate UIImageView back to alpha 1 over 0.3sec
+        [UIView animateWithDuration:0.8 animations:^{
+        weakCell.posterView.alpha = 1.0;
+                                            }];
+        }
+                                       
+    }
+    failure:^(NSURLRequest *request, NSHTTPURLResponse * response, NSError *error) {
+        // do something for the failure condition
+    }];
     [cell.posterView setImageWithURL:posterURL];
     
-    //cell.textLabel.text = movie[@"title"];
     return cell;
 }
 
