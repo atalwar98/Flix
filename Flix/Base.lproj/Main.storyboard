@@ -27,11 +27,11 @@
             </objects>
             <point key="canvasLocation" x="-1343" y="-117"/>
         </scene>
-        <!--Item-->
+        <!--Movie Collection-->
         <scene sceneID="846-B1-GSr">
             <objects>
                 <navigationController id="AF3-oF-Ii6" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="2qR-5g-bx7"/>
+                    <tabBarItem key="tabBarItem" title="Movie Collection" id="2qR-5g-bx7"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="byR-jD-8jg">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -118,6 +118,7 @@
         <!--Movies Grid View Controller-->
         <scene sceneID="DK7-Xt-vMJ">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="I0K-Fu-O0o" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="Zki-w0-w2r" customClass="MoviesGridViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="o0l-7s-Tl6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -150,7 +151,6 @@
                                         <color key="backgroundColor" red="0.60912591439999997" green="0.8914332452" blue="1" alpha="0.84705882349999995" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
                                             <outlet property="posterView" destination="rc8-pA-Q1v" id="COt-U0-8pC"/>
-                                            <segue destination="hWx-1Y-Feh" kind="show" id="5E5-nw-UeV"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -164,7 +164,6 @@
                         <outlet property="collectionView" destination="2Uk-HB-kxl" id="NSf-SJ-1j0"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="I0K-Fu-O0o" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-460" y="582.45877061469275"/>
         </scene>
@@ -219,37 +218,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QCn-eu-kIn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1343" y="1302"/>
-        </scene>
-        <!--Details Grid View Controller-->
-        <scene sceneID="sP9-Gc-8ne">
-            <objects>
-                <viewController id="hWx-1Y-Feh" customClass="DetailsGridViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Jqe-yv-4Hw">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q82-5X-v4s">
-                                <rect key="frame" x="0.0" y="359" width="375" height="259"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CWP-0z-XTV">
-                                <rect key="frame" x="0.0" y="64" width="375" height="300"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="BJU-Mh-3g5"/>
-                    </view>
-                    <connections>
-                        <outlet property="movieImage" destination="CWP-0z-XTV" id="kJB-co-NeT"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vFn-W6-Kbr" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-460" y="1300.2998500749627"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="KUr-K3-g8K">
