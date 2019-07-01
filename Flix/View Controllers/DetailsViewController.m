@@ -35,6 +35,7 @@
     NSString *fullBackdropURLString = [baseURLString stringByAppendingString:posterURLString];
     
     NSURL *backdropURL = [NSURL URLWithString:fullPosterURLString];
+    //method obtained from AFNetworking lib
     [self.backdropView setImageWithURL:backdropURL];
     
     self.titleLabel.text = self.movie[@"title"];

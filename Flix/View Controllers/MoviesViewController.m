@@ -8,6 +8,7 @@
 
 #import "MoviesViewController.h"
 #import "MovieCell.h"
+//AFNetworking library adds a few fxns to existing library UIImageView
 #import "UIImageView+AFNetworking.h"
 #import "DetailsViewController.h"
 
@@ -25,17 +26,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
    
+    //notifying tableView that moviesViewController is both its datasource and delegate; so, datasource/delegate methods are in this controller class
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
-    
     [self.activityIndicator startAnimating];
     
+    //fetch data from API
     [self fetchMovies];
     
-    
-    
+    //initialization of pull to refresh feature
     self.refreshControl = [[UIRefreshControl alloc] init];
+    //adding target-action pair programmatically; calls fetchMovies method on this class when user performs refresh action
     [self.refreshControl addTarget:self action:@selector(fetchMovies) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:self.refreshControl atIndex:0];
     
@@ -47,22 +49,20 @@
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:nil delegateQueue:[NSOperationQueue mainQueue]];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error != nil) {
-            
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No Movies!"
                 message:@"You seem to be offline. Please check your internet connection."
                 preferredStyle:(UIAlertControllerStyleAlert)];
-            // create a cancel action
-            UIAlertAction *tryAgainAction = [UIAlertAction actionWithTitle:@"Try Again"
+            
+            UIAlertAction *tryAgainAction = [UIAlertAction actionWithTitle:@"Try Again" // create a Try Again action
             style:UIAlertActionStyleCancel
             handler:^(UIAlertAction * _Nonnull action) {
-            // handle try again response here. Doing nothing will dismiss the view.
+            // handle Try Again response here. Doing nothing will dismiss the view.
                 // Start the activity indicator
                 [self.activityIndicator startAnimating];
                 [self fetchMovies];
 }];
-            // add the cancel action to the alertController
-            [alert addAction:tryAgainAction];
             
+            [alert addAction:tryAgainAction]; // add the try again action to the alertController
             
             [self presentViewController:alert animated:YES completion:^{
             // optional code for what happens after the alert controller has finished presenting
@@ -72,15 +72,16 @@
             NSDictionary *dataDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             
             NSLog(@"%@", dataDictionary);
-            // TODO: Get the array of movies
-            self.movies = dataDictionary[@"results"];
+            self.movies = dataDictionary[@"results"]; //array of movies
             for (NSDictionary *movie in self.movies){
                 NSLog(@"%@", movie[@"title"]);
             }
-
+            //triggers calling datasource methods again since movies array could have changed after obtaining data
             [self.tableView reloadData];
         }
+        //end refreshing once the movie data has been obtained from the API
         [self.refreshControl endRefreshing];
+        
         // Stop the activity indicator
         // Hides automatically if "Hides When Stopped" is enabled
         [self.activityIndicator stopAnimating];
@@ -89,13 +90,14 @@
     
 }
 
+//datasource method #1
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.movies.count;
 }
 
+//datasource method #2
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     MovieCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MovieCell"];
-    
     
     NSDictionary *movie = self.movies[indexPath.row];
     cell.titleLabel.text = movie[@"title"];
@@ -105,7 +107,10 @@
     NSString *posterURLString= movie[@"poster_path"];
     NSString *fullPosterURLString = [baseURLString stringByAppendingString:posterURLString];
     
+    //convert URL in string format into URL type
     NSURL *posterURL = [NSURL URLWithString:fullPosterURLString];
+    
+    //clears out previous image before downloading the new one; doing so prevents previous image from momentarily appearing when it is dequeued
     cell.posterView.image = nil;
     NSURLRequest *request = [NSURLRequest requestWithURL:posterURL];
 
@@ -129,6 +134,7 @@
     failure:^(NSURLRequest *request, NSHTTPURLResponse * response, NSError *error) {
         // do something for the failure condition
     }];
+    //this method is obtained from the AFNetworking 3rd party library
     [cell.posterView setImageWithURL:posterURL];
     
     return cell;
@@ -141,16 +147,25 @@
  
  // In a storyboard-based application, you will often want to do a little preparation before navigation
  - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
+ 
  // Pass the selected object to the new view controller.
      
+     //reference to the cell the user tapped
      UITableViewCell *tappedCell = sender;
+     
+     //obtain index of cell via indexPath
      NSIndexPath *indexPath = [self.tableView indexPathForCell:tappedCell];
+     
+     //obtain particular movie (dictionary) that user tapped
      NSDictionary *movie = self.movies[indexPath.row];
      
+     
      [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+     
+     // Get the new view controller using [segue destinationViewController].
      DetailsViewController *detailsViewController = [segue destinationViewController];
      
+     //set the public movie instance var in the details controller to be the one the user tapped on so that the details controller has access to all the relevant info
      detailsViewController.movie = movie;
      
  }
