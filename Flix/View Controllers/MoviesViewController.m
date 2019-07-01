@@ -79,7 +79,7 @@
             //triggers calling datasource methods again since movies array could have changed after obtaining data
             [self.tableView reloadData];
         }
-        //end refreshing once the movie data has been obtained from the API
+        //end pull to refresh feature once the movie data has been obtained from the API
         [self.refreshControl endRefreshing];
         
         // Stop the activity indicator

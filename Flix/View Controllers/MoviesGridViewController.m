@@ -32,6 +32,7 @@
     layout.minimumInteritemSpacing = 5;
     layout.minimumLineSpacing = 5;
     
+    //configuring the layout of the movie collection view
     CGFloat postersPerLine = 2;
     CGFloat itemWidth = (self.collectionView.frame.size.width - (layout.minimumInteritemSpacing*(postersPerLine - 1))) / postersPerLine;
     CGFloat itemHeight = itemWidth * 1.5;
@@ -50,23 +51,19 @@
             NSDictionary *dataDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             
             NSLog(@"%@", dataDictionary);
-            // TODO: Get the array of movies
+            //Store the movies in a property to use elsewhere
             self.movies = dataDictionary[@"results"];
-            [self.collectionView reloadData];
-            // TODO: Store the movies in a property to use elsewhere
-            // TODO: Reload your table view data
             
+            // Reload your table view data
+            [self.collectionView reloadData];
         }
-        
-        // Stop the activity indicator
-        // Hides automatically if "Hides When Stopped" is enabled
         
     }];
     [task resume];
     
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -74,7 +71,7 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }
-*/
+
 
 - (UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     
